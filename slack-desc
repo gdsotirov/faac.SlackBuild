@@ -1,0 +1,10 @@
+faac: faac 1.24 (2004-09-15)
+faac:
+faac: FAAC - Freeware Advanced Audio Coder
+faac:
+faac:
+faac: ---
+faac: Package build by Georgi D. Sotirov <gdsotirov@dir.bg>
+faac: Configure command: ./configure --prefix=/usr/local
+faac: Build date: 2005-03-15 23:00
+faac:
