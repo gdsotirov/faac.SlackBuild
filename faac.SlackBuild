@@ -1,13 +1,13 @@
 #!/bin/sh
 #
-# SlackBuild for faac
+# SlackBuild for FAAC
 # Written by Georgi D. Sotirov <gdsotirov@dir.bg>
 #
 
 . ../slack-package.conf
 
 NAME=faac
-VERSION=1.25
+VERSION=1.26
 BUILD=1
 
 ARCH=${ARCH:-i486}
@@ -32,14 +32,14 @@ CXXFLAGS=$SLKCFLAGS \
             --prefix=/usr \
 	    --enable-shared=yes \
 	    --enable-static=no \
-	    --with-mp4v2
+	    --with-mp4v2 || exit 2
 
-make all || exit 2
+make -j4 all || exit 3
 
 PKG="$TMP/package-$NAME"
 mkdir -p $PKG
 
-make DESTDIR=$PKG install
+make DESTDIR=$PKG install || exit 4
 
 bin_perms $PKG
 ( cd $PKG; strip_bin; strip_lib )
@@ -47,9 +47,11 @@ bin_perms $PKG
 
 mkdir -p $PKG/install
 install -m 644 $CWD/slack-desc     $PKG/install/slack-desc
+install -m 644 $CWD/slack-required $PKG/install/slack-required
 
 mkdir -p $PKG/usr/src/slackbuilds/$NAME-$VERSION
 install -m 644 $CWD/slack-desc       $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-desc
+install -m 644 $CWD/slack-required   $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-required
 install -m 644 $CWD/$NAME.SlackBuild $PKG/usr/src/slackbuilds/$NAME-$VERSION/$NAME.SlackBuild
 
 cd $PKG
