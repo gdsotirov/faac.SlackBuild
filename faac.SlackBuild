@@ -7,7 +7,7 @@
 . ../slack-package.conf
 
 NAME=faac
-VERSION=1.26
+VERSION=1.28
 BUILD=1
 
 ARCH=${ARCH:-i486}
@@ -15,24 +15,23 @@ CWD=${CWD:-`cwd`}
 TMP=${TMP:-/tmp}
 
 cd $TMP
-tar -zxvf $CWD/$NAME-$VERSION.tar.gz
-SRC=$TMP/$NAME
+tar -jxvf $CWD/$NAME-$VERSION.tar.bz2
+SRC=$TMP/$NAME-$VERSION
 cd $SRC
 fix_source
 
-# Fix the wrong autoconfig.in file
-mv configure.in configure.in.orig
-perl -p -e 's/\\\r\n//' configure.in.orig > configure.in
-autoreconf -vif || exit 1
+# Apply patches
+patch -p1 < $CWD/$NAME-$VERSION-with_mp4.diff
 
 CFLAGS=$SLKCFLAGS \
 CXXFLAGS=$SLKCFLAGS \
 ./configure --build=$ARCH-slackware-linux \
             --host=$ARCH-slackware-linux \
             --prefix=/usr \
-	    --enable-shared=yes \
-	    --enable-static=no \
-	    --with-mp4v2 || exit 2
+            --mandir=/usr/man \
+            --enable-shared=yes \
+            --enable-static=no \
+            --with-mp4v2 || exit 2
 
 make -j4 all || exit 3
 
@@ -44,12 +43,15 @@ make DESTDIR=$PKG install || exit 4
 bin_perms $PKG
 ( cd $PKG; strip_bin; strip_lib )
 ( cd $SRC; create_docs $PKG $NAME-$VERSION )
+gzip_man $PKG
 
 mkdir -p $PKG/install
 install -m 644 $CWD/slack-desc     $PKG/install/slack-desc
 install -m 644 $CWD/slack-required $PKG/install/slack-required
 
 mkdir -p $PKG/usr/src/slackbuilds/$NAME-$VERSION
+install -m 644 $CWD/$NAME-$VERSION-with_mp4.diff \
+               $PKG/usr/src/slackbuilds/$NAME-$VERSION/$NAME-$VERSION-with_mp4.diff
 install -m 644 $CWD/slack-desc       $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-desc
 install -m 644 $CWD/slack-required   $PKG/usr/src/slackbuilds/$NAME-$VERSION/slack-required
 install -m 644 $CWD/$NAME.SlackBuild $PKG/usr/src/slackbuilds/$NAME-$VERSION/$NAME.SlackBuild
