@@ -4,8 +4,8 @@ faac: FAAC is an Advanced Audio Coder (MPEG2-AAC, MPEG4-AAC).
 faac: The goal of FAAC is to explore the possibilities of AAC and exceed
 faac: the quality of the currently best MP3 encoders.
 faac:
+faac: This package includes also the MP4 library.
 faac:
 faac:
 faac:
 faac: Packaged by Georgi D. Sotirov <gdsotirov@dir.bg>
-faac:
