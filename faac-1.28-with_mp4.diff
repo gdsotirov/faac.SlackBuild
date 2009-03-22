@@ -1,0 +1,208 @@
+diff -u -r faac-1.28-orig/common/mp4v2/Makefile.am faac-1.28/common/mp4v2/Makefile.am
+--- faac-1.28-orig/common/mp4v2/Makefile.am	2009-01-25 03:14:34.000000000 +0200
++++ faac-1.28/common/mp4v2/Makefile.am	2009-03-21 18:10:33.000000000 +0200
+@@ -2,11 +2,11 @@
+ 
+ AM_CXXFLAGS = -Wall
+ 
+-noinst_LIBRARIES = libmp4v2.a 
++LIBRARIES = libmp4v2.la
+ 
+-noinst_HEADERS = mp4.h mpeg4ip.h mpeg4ip_version.h mpeg4ip_config.h
++HEADERS = mp4.h mpeg4ip.h mpeg4ip_version.h mpeg4ip_config.h
+ 
+-libmp4v2_a_SOURCES = \
++libmp4v2_la_SOURCES = \
+ 	3gp.cpp \
+ 	atom_amr.cpp \
+ 	atom_avc1.cpp \
+diff -u -r faac-1.28-orig/common/mp4v2/Makefile.in faac-1.28/common/mp4v2/Makefile.in
+--- faac-1.28-orig/common/mp4v2/Makefile.in	2009-02-10 10:37:00.000000000 +0200
++++ faac-1.28/common/mp4v2/Makefile.in	2009-03-22 09:53:09.000000000 +0200
+@@ -38,7 +38,7 @@
+ build_triplet = @build@
+ host_triplet = @host@
+ subdir = common/mp4v2
+-DIST_COMMON = README $(noinst_HEADERS) $(srcdir)/Makefile.am \
++DIST_COMMON = README $(HEADERS) $(srcdir)/Makefile.am \
+ 	$(srcdir)/Makefile.in TODO
+ ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
+ am__aclocal_m4_deps = $(top_srcdir)/configure.in
+@@ -47,11 +47,12 @@
+ mkinstalldirs = $(install_sh) -d
+ CONFIG_HEADER = $(top_builddir)/config.h
+ CONFIG_CLEAN_FILES = mpeg4ip_config.h
+-LIBRARIES = $(noinst_LIBRARIES)
++LIBRARIES_INSTALL = $(INSTALL)
++LIBRARIES = $(LIBRARIES)
+ ARFLAGS = cru
+ libmp4v2_a_AR = $(AR) $(ARFLAGS)
+-libmp4v2_a_LIBADD =
+-am_libmp4v2_a_OBJECTS = 3gp.$(OBJEXT) atom_amr.$(OBJEXT) \
++libmp4v2_la_LIBADD =
++am_libmp4v2_la_OBJECTS = 3gp.$(OBJEXT) atom_amr.$(OBJEXT) \
+ 	atom_avc1.$(OBJEXT) atom_avcC.$(OBJEXT) atom_d263.$(OBJEXT) \
+ 	atom_damr.$(OBJEXT) atom_dref.$(OBJEXT) atom_elst.$(OBJEXT) \
+ 	atom_enca.$(OBJEXT) atom_encv.$(OBJEXT) atom_free.$(OBJEXT) \
+@@ -74,7 +75,7 @@
+ 	mp4property.$(OBJEXT) mp4track.$(OBJEXT) mp4util.$(OBJEXT) \
+ 	ocidescriptors.$(OBJEXT) odcommands.$(OBJEXT) \
+ 	qosqualifiers.$(OBJEXT) rtphint.$(OBJEXT) virtual_io.$(OBJEXT)
+-libmp4v2_a_OBJECTS = $(am_libmp4v2_a_OBJECTS)
++libmp4v2_la_OBJECTS = $(am_libmp4v2_la_OBJECTS)
+ DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles
+@@ -94,9 +95,10 @@
+ CCLD = $(CC)
+ LINK = $(LIBTOOL) --tag=CC --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+ 	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+-SOURCES = $(libmp4v2_a_SOURCES)
+-DIST_SOURCES = $(libmp4v2_a_SOURCES)
+-HEADERS = $(noinst_HEADERS)
++SOURCES = $(libmp4v2_la_SOURCES)
++DIST_SOURCES = $(libmp4v2_la_SOURCES)
++HEADERS_INSTALL = $(INSTALL_HEADER)
++HEADERS = $(HEADERS)
+ ETAGS = etags
+ CTAGS = ctags
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+@@ -207,9 +209,9 @@
+ target_alias = @target_alias@
+ INCLUDES = -I$(top_srcdir)/include
+ AM_CXXFLAGS = -Wall
+-noinst_LIBRARIES = libmp4v2.a 
+-noinst_HEADERS = mp4.h mpeg4ip.h mpeg4ip_version.h mpeg4ip_config.h
+-libmp4v2_a_SOURCES = \
++LIBRARIES = libmp4v2.la
++HEADERS = mp4.h mpeg4ip.h mpeg4ip_version.h mpeg4ip_config.h
++libmp4v2_la_SOURCES = \
+ 	3gp.cpp \
+ 	atom_amr.cpp \
+ 	atom_avc1.cpp \
+@@ -332,12 +334,29 @@
+ $(ACLOCAL_M4):  $(am__aclocal_m4_deps)
+ 	cd $(top_builddir) && $(MAKE) $(AM_MAKEFLAGS) am--refresh
+ 
+-clean-noinstLIBRARIES:
+-	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
+-libmp4v2.a: $(libmp4v2_a_OBJECTS) $(libmp4v2_a_DEPENDENCIES) 
+-	-rm -f libmp4v2.a
+-	$(libmp4v2_a_AR) libmp4v2.a $(libmp4v2_a_OBJECTS) $(libmp4v2_a_LIBADD)
+-	$(RANLIB) libmp4v2.a
++install-LIBRARIES: $(LIBRARIES)
++	        @$(NORMAL_INSTALL)
++	test -z "$(libdir)" || $(mkdir_p) "$(DESTDIR)$(libdir)"
++	@list='$(LIBRARIES)'; for p in $$list; do \
++	if test -f $$p; then \
++	f=$(am__strip_dir) \
++	echo " $(LIBTOOL) --mode=install $(LIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) '$$p' '$(DESTDIR)$(libdir)/$$f'"; \
++	$(LIBTOOL) --mode=install $(LIBRARIES_INSTALL) $(INSTALL_STRIP_FLAG) "$$p" "$(DESTDIR)$(libdir)/$$f"; \
++	else :; fi; \
++	done
++
++uninstall-LIBRARIES:
++	        @$(NORMAL_UNINSTALL)
++	@set -x; list='$(LIBRARIES)'; for p in $$list; do \
++	p=$(am__strip_dir) \
++	echo " $(LIBTOOL) --mode=uninstall rm -f '$(DESTDIR)$(libdir)/$$p'"; \
++	$(LIBTOOL) --mode=uninstall rm -f "$(DESTDIR)$(libdir)/$$p"; \
++	done
++
++clean-LIBRARIES:
++	-test -z "$(LIBRARIES)" || rm -f $(LIBRARIES)
++libmp4v2.la: $(libmp4v2_la_OBJECTS) $(libmp4v2_la_DEPENDENCIES)
++	$(CXXLINK) -rpath $(libdir) $(libmp4v2_la_LDFLAGS) $(libmp4v2_la_OBJECTS) $(libmp4v2_la_LIBADD) $(LIBS)
+ 
+ mostlyclean-compile:
+ 	-rm -f *.$(OBJEXT)
+@@ -441,6 +460,23 @@
+ distclean-libtool:
+ 	-rm -f libtool
+ uninstall-info-am:
++install-HEADERS: $(HEADERS)
++	@$(NORMAL_INSTALL)
++	test -z "$(includedir)" || $(mkdir_p) "$(DESTDIR)$(includedir)"
++	@list='$(HEADERS)'; for p in $$list; do \
++	if test -f "$$p"; then d=; else d="$(srcdir)/"; fi; \
++	f=$(am__strip_dir) \
++	echo " $(HEADERS_INSTALL) '$$d$$p' '$(DESTDIR)$(includedir)/$$f'"; \
++	$(HEADERS_INSTALL) "$$d$$p" "$(DESTDIR)$(includedir)/$$f"; \
++	done
++
++uninstall-HEADERS:
++	@$(NORMAL_UNINSTALL)
++	@list='$(HEADERS)'; for p in $$list; do \
++	f=$(am__strip_dir) \
++	echo " rm -f '$(DESTDIR)$(includedir)/$$f'"; \
++	rm -f "$(DESTDIR)$(includedir)/$$f"; \
++	done
+ 
+ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+ 	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
+@@ -547,7 +583,7 @@
+ 	@echo "it deletes files that may require special tools to rebuild."
+ clean: clean-am
+ 
+-clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
++clean-am: clean-generic clean-libtool clean-LIBRARIES \
+ 	mostlyclean-am
+ 
+ distclean: distclean-am
+@@ -566,11 +602,11 @@
+ 
+ info-am:
+ 
+-install-data-am:
++install-data-am: install-HEADERS
+ 
+-install-exec-am:
++install-exec-am: install-LIBRARIES
+ 
+-install-info: install-info-am
++instal-info: install-info-am
+ 
+ install-man:
+ 
+@@ -597,7 +633,7 @@
+ uninstall-am: uninstall-info-am
+ 
+ .PHONY: CTAGS GTAGS all all-am check check-am clean clean-generic \
+-	clean-libtool clean-noinstLIBRARIES ctags distclean \
++	clean-libtool clean-LIBRARIES ctags distclean \
+ 	distclean-compile distclean-generic distclean-libtool \
+ 	distclean-tags distdir dvi dvi-am html html-am info info-am \
+ 	install install-am install-data install-data-am install-exec \
+diff -u -r faac-1.28-orig/frontend/Makefile.am faac-1.28/frontend/Makefile.am
+--- faac-1.28-orig/frontend/Makefile.am	2008-12-16 02:56:00.000000000 +0200
++++ faac-1.28/frontend/Makefile.am	2009-03-21 18:10:33.000000000 +0200
+@@ -5,7 +5,7 @@
+ 
+ if WITH_MP4V2
+ INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/common/mp4v2
+-LDADD = $(top_builddir)/libfaac/libfaac.la $(top_srcdir)/common/mp4v2/libmp4v2.a -lm -lstdc++
++LDADD = $(top_builddir)/libfaac/libfaac.la $(top_srcdir)/common/mp4v2/libmp4v2.la -lm -lstdc++
+ else
+ INCLUDES = -I$(top_srcdir)/include 
+ LDADD = $(top_builddir)/libfaac/libfaac.la -lm
+diff -u -r faac-1.28-orig/frontend/Makefile.in faac-1.28/frontend/Makefile.in
+--- faac-1.28-orig/frontend/Makefile.in	2009-02-10 10:37:00.000000000 +0200
++++ faac-1.28/frontend/Makefile.in	2009-03-21 18:10:33.000000000 +0200
+@@ -56,7 +56,7 @@
+ @WITH_MP4V2_FALSE@	$(top_builddir)/libfaac/libfaac.la
+ @WITH_MP4V2_TRUE@faac_DEPENDENCIES =  \
+ @WITH_MP4V2_TRUE@	$(top_builddir)/libfaac/libfaac.la \
+-@WITH_MP4V2_TRUE@	$(top_srcdir)/common/mp4v2/libmp4v2.a
++@WITH_MP4V2_TRUE@	$(top_srcdir)/common/mp4v2/libmp4v2.la
+ DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ am__depfiles_maybe = depfiles
+@@ -186,7 +186,7 @@
+ @WITH_MP4V2_FALSE@INCLUDES = -I$(top_srcdir)/include 
+ @WITH_MP4V2_TRUE@INCLUDES = -I$(top_srcdir)/include -I$(top_srcdir)/common/mp4v2
+ @WITH_MP4V2_FALSE@LDADD = $(top_builddir)/libfaac/libfaac.la -lm
+-@WITH_MP4V2_TRUE@LDADD = $(top_builddir)/libfaac/libfaac.la $(top_srcdir)/common/mp4v2/libmp4v2.a -lm -lstdc++
++@WITH_MP4V2_TRUE@LDADD = $(top_builddir)/libfaac/libfaac.la $(top_srcdir)/common/mp4v2/libmp4v2.la -lm -lstdc++
+ all: all-am
+ 
+ .SUFFIXES:
