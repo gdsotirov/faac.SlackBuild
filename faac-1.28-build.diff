@@ -2,6 +2,7 @@
 #   error: redefinition of strcasestr function from string.h
 #   warning: deprecated conversion of string constants to char*
 #   warning: using '==' for comparison between C strings
+#   warning: using '%llu' for type uint64_t on 64 bits systems
 # Copyright (C) 2012 Georgi D. Sotirov <gdsotirov@dir.bg>
 #
 # This program is free software; you can redistribute it and/or
@@ -17,13 +18,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
-# 
-# $Id: faac-1.28-build.diff,v 1.1 2012/09/01 15:15:37 gsotirov Exp $
+#
+# $Id: faac-1.28-build.diff,v 1.2 2012/09/01 17:08:35 gsotirov Exp $
 #
 
 diff -urNad faac-1.28-orig/common/mp4v2/atom_avcC.cpp faac-1.28/common/mp4v2/atom_avcC.cpp
 --- faac-1.28-orig/common/mp4v2/atom_avcC.cpp	2009-01-25 03:14:34.000000000 +0200
-+++ faac-1.28/common/mp4v2/atom_avcC.cpp	2012-09-01 17:39:27.000000000 +0300
++++ faac-1.28/common/mp4v2/atom_avcC.cpp	2012-09-01 19:49:19.000000000 +0300
 @@ -29,7 +29,7 @@
  class SizeTableProperty : public MP4TableProperty 
  {
@@ -35,7 +36,7 @@ diff -urNad faac-1.28-orig/common/mp4v2/atom_avcC.cpp faac-1.28/common/mp4v2/ato
    void ReadEntry(MP4File *pFile, u_int32_t index) {
 diff -urNad faac-1.28-orig/common/mp4v2/atom_ohdr.cpp faac-1.28/common/mp4v2/atom_ohdr.cpp
 --- faac-1.28-orig/common/mp4v2/atom_ohdr.cpp	2009-01-25 03:14:34.000000000 +0200
-+++ faac-1.28/common/mp4v2/atom_ohdr.cpp	2012-09-01 16:25:16.000000000 +0300
++++ faac-1.28/common/mp4v2/atom_ohdr.cpp	2012-09-01 19:49:19.000000000 +0300
 @@ -21,7 +21,7 @@
        \param useCountedFormat    counted format flag.
        \param useUnicode          unicode flag.
@@ -47,7 +48,7 @@ diff -urNad faac-1.28-orig/common/mp4v2/atom_ohdr.cpp faac-1.28/common/mp4v2/ato
    }
 diff -urNad faac-1.28-orig/common/mp4v2/atom_stz2.cpp faac-1.28/common/mp4v2/atom_stz2.cpp
 --- faac-1.28-orig/common/mp4v2/atom_stz2.cpp	2009-01-25 03:14:34.000000000 +0200
-+++ faac-1.28/common/mp4v2/atom_stz2.cpp	2012-09-01 16:20:11.000000000 +0300
++++ faac-1.28/common/mp4v2/atom_stz2.cpp	2012-09-01 19:49:19.000000000 +0300
 @@ -30,7 +30,7 @@
  class MP4HalfSizeTableProperty : public MP4TableProperty
  {
@@ -59,7 +60,7 @@ diff -urNad faac-1.28-orig/common/mp4v2/atom_stz2.cpp faac-1.28/common/mp4v2/ato
    // The count is half the actual size
 diff -urNad faac-1.28-orig/common/mp4v2/mp4atom.cpp faac-1.28/common/mp4v2/mp4atom.cpp
 --- faac-1.28-orig/common/mp4v2/mp4atom.cpp	2009-01-25 03:14:34.000000000 +0200
-+++ faac-1.28/common/mp4v2/mp4atom.cpp	2012-09-01 16:13:11.000000000 +0300
++++ faac-1.28/common/mp4v2/mp4atom.cpp	2012-09-01 19:49:19.000000000 +0300
 @@ -806,7 +806,7 @@
  	AddProperty(new MP4Integer24Property("flags"));
  }
@@ -71,7 +72,7 @@ diff -urNad faac-1.28-orig/common/mp4v2/mp4atom.cpp faac-1.28/common/mp4v2/mp4at
  	pReserved->SetReadOnly();
 diff -urNad faac-1.28-orig/common/mp4v2/mp4atom.h faac-1.28/common/mp4v2/mp4atom.h
 --- faac-1.28-orig/common/mp4v2/mp4atom.h	2009-01-25 03:14:34.000000000 +0200
-+++ faac-1.28/common/mp4v2/mp4atom.h	2012-09-01 16:20:50.000000000 +0300
++++ faac-1.28/common/mp4v2/mp4atom.h	2012-09-01 19:49:19.000000000 +0300
 @@ -204,7 +204,7 @@
  
  	void AddVersionAndFlags();
@@ -83,7 +84,7 @@ diff -urNad faac-1.28-orig/common/mp4v2/mp4atom.h faac-1.28/common/mp4v2/mp4atom
  		bool mandatory, bool onlyOne = true);
 diff -urNad faac-1.28-orig/common/mp4v2/mp4file.cpp faac-1.28/common/mp4v2/mp4file.cpp
 --- faac-1.28-orig/common/mp4v2/mp4file.cpp	2009-01-25 03:14:34.000000000 +0200
-+++ faac-1.28/common/mp4v2/mp4file.cpp	2012-09-01 16:32:37.000000000 +0300
++++ faac-1.28/common/mp4v2/mp4file.cpp	2012-09-01 19:49:19.000000000 +0300
 @@ -718,7 +718,7 @@
  	}
  }
@@ -132,7 +133,7 @@ diff -urNad faac-1.28-orig/common/mp4v2/mp4file.cpp faac-1.28/common/mp4v2/mp4fi
  	  }
 diff -urNad faac-1.28-orig/common/mp4v2/mp4file.h faac-1.28/common/mp4v2/mp4file.h
 --- faac-1.28-orig/common/mp4v2/mp4file.h	2009-01-25 03:14:34.000000000 +0200
-+++ faac-1.28/common/mp4v2/mp4file.h	2012-09-01 16:30:52.000000000 +0300
++++ faac-1.28/common/mp4v2/mp4file.h	2012-09-01 19:49:19.000000000 +0300
 @@ -700,7 +700,7 @@
  	const char* TempFileName();
  	void Rename(const char* existingFileName, const char* newFileName);
@@ -144,7 +145,7 @@ diff -urNad faac-1.28-orig/common/mp4v2/mp4file.h faac-1.28/common/mp4v2/mp4file
  		MP4Property** ppProperty, u_int32_t* pIndex = NULL);
 diff -urNad faac-1.28-orig/common/mp4v2/mp4property.cpp faac-1.28/common/mp4v2/mp4property.cpp
 --- faac-1.28-orig/common/mp4v2/mp4property.cpp	2009-01-25 03:14:34.000000000 +0200
-+++ faac-1.28/common/mp4v2/mp4property.cpp	2012-09-01 17:47:28.000000000 +0300
++++ faac-1.28/common/mp4v2/mp4property.cpp	2012-09-01 19:49:19.000000000 +0300
 @@ -313,7 +313,7 @@
  
  // MP4StringProperty
@@ -183,7 +184,7 @@ diff -urNad faac-1.28-orig/common/mp4v2/mp4property.cpp faac-1.28/common/mp4v2/m
  { 
 diff -urNad faac-1.28-orig/common/mp4v2/mp4property.h faac-1.28/common/mp4v2/mp4property.h
 --- faac-1.28-orig/common/mp4v2/mp4property.h	2009-01-25 03:14:34.000000000 +0200
-+++ faac-1.28/common/mp4v2/mp4property.h	2012-09-01 17:53:48.000000000 +0300
++++ faac-1.28/common/mp4v2/mp4property.h	2012-09-01 19:49:19.000000000 +0300
 @@ -100,7 +100,7 @@
  
  class MP4IntegerProperty : public MP4Property {
@@ -267,7 +268,7 @@ diff -urNad faac-1.28-orig/common/mp4v2/mp4property.h faac-1.28/common/mp4v2/mp4
  	MP4DescriptorProperty(name, tagsStart, tagsEnd, mandatory, onlyOne) { }
 diff -urNad faac-1.28-orig/common/mp4v2/mp4track.cpp faac-1.28/common/mp4v2/mp4track.cpp
 --- faac-1.28-orig/common/mp4v2/mp4track.cpp	2009-01-25 03:14:34.000000000 +0200
-+++ faac-1.28/common/mp4v2/mp4track.cpp	2012-09-01 16:35:44.000000000 +0300
++++ faac-1.28/common/mp4v2/mp4track.cpp	2012-09-01 19:49:19.000000000 +0300
 @@ -1360,7 +1360,7 @@
    }
  }
@@ -279,7 +280,7 @@ diff -urNad faac-1.28-orig/common/mp4v2/mp4track.cpp faac-1.28/common/mp4v2/mp4t
  
 diff -urNad faac-1.28-orig/common/mp4v2/mp4track.h faac-1.28/common/mp4v2/mp4track.h
 --- faac-1.28-orig/common/mp4v2/mp4track.h	2009-01-25 03:14:34.000000000 +0200
-+++ faac-1.28/common/mp4v2/mp4track.h	2012-09-01 16:36:25.000000000 +0300
++++ faac-1.28/common/mp4v2/mp4track.h	2012-09-01 19:49:19.000000000 +0300
 @@ -168,7 +168,7 @@
  	void UpdateSyncSamples(MP4SampleId sampleId, 
  		bool isSyncSample);
@@ -291,7 +292,7 @@ diff -urNad faac-1.28-orig/common/mp4v2/mp4track.h faac-1.28/common/mp4v2/mp4tra
  	MP4Duration ToMovieDuration(MP4Duration trackDuration);
 diff -urNad faac-1.28-orig/common/mp4v2/mpeg4ip.h faac-1.28/common/mp4v2/mpeg4ip.h
 --- faac-1.28-orig/common/mp4v2/mpeg4ip.h	2009-01-27 00:42:35.000000000 +0200
-+++ faac-1.28/common/mp4v2/mpeg4ip.h	2012-09-01 16:08:25.000000000 +0300
++++ faac-1.28/common/mp4v2/mpeg4ip.h	2012-09-01 19:50:55.000000000 +0300
 @@ -120,14 +120,6 @@
  #endif
  #include <sys/param.h>
@@ -307,9 +308,18 @@ diff -urNad faac-1.28-orig/common/mp4v2/mpeg4ip.h faac-1.28/common/mp4v2/mpeg4ip
  #define OPEN_RDWR O_RDWR
  #define OPEN_CREAT O_CREAT 
  #define OPEN_RDONLY O_RDONLY
+@@ -135,7 +127,7 @@
+ #define closesocket close
+ #define IOSBINARY ios::bin
+ 
+-#if SIZEOF_LONG == 8
++#if __WORDSIZE == 64
+ #define MAX_UINT64 -1LU
+ #define D64F "ld"
+ #define U64F  "lu"
 diff -urNad faac-1.28-orig/common/mp4v2/ocidescriptors.cpp faac-1.28/common/mp4v2/ocidescriptors.cpp
 --- faac-1.28-orig/common/mp4v2/ocidescriptors.cpp	2004-07-27 11:28:24.000000000 +0300
-+++ faac-1.28/common/mp4v2/ocidescriptors.cpp	2012-09-01 16:29:24.000000000 +0300
++++ faac-1.28/common/mp4v2/ocidescriptors.cpp	2012-09-01 19:49:19.000000000 +0300
 @@ -171,7 +171,7 @@
  
  class MP4CreatorTableProperty : public MP4TableProperty {
