@@ -17,7 +17,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 # 
-# $Id: faac.SlackBuild,v 1.4.4.1 2016/08/18 18:04:17 gsotirov Exp $
+# $Id: faac.SlackBuild,v 1.4.4.2 2016/08/18 18:08:48 gsotirov Exp $
 #
 
 . ../../slack-package.conf
@@ -26,6 +26,10 @@ NAME=faac
 VERSION=1.28
 ARCH=${ARCH:-i486}
 BUILD=${BUILD:-1}
+
+if [ "$ARCH" = "x86_64" ]; then
+  SLKCFLAGS="$SLKCFLAGS -fPIC"
+fi
 
 TMP=${TMP:-/tmp}
 CWD=${CWD:-`pwd`}
