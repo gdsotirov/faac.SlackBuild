@@ -4,12 +4,16 @@
 # Written by Georgi D. Sotirov <gdsotirov@dir.bg>
 #
 
-. ../slack-package.conf
+. ../../slack-package.conf
 
 NAME=faac
 VERSION=1.28
 BUILD=2
 ARCH=${ARCH:-i486}
+
+if [ "$ARCH" = "x86_64" ]; then
+  SLKCFLAGS="$SLKCFLAGS -fPIC"
+fi
 
 TMP=${TMP:-/tmp}
 CWD=${CWD:-`pwd`}
@@ -47,6 +51,7 @@ CXXFLAGS=$SLKCFLAGS \
 ./configure --build=$ARCH-slackware-linux \
             --host=$ARCH-slackware-linux \
             --prefix=/usr \
+            --libdir=/usr/lib${LIBDIRSUFFIX} \
             --mandir=/usr/man \
             --enable-shared=yes \
             --enable-static=no \
