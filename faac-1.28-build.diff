@@ -3,7 +3,7 @@
 #   warning: deprecated conversion of string constants to char*
 #   warning: using '==' for comparison between C strings
 #   warning: using '%llu' for type uint64_t on 64 bits systems
-# Copyright (C) 2012 Georgi D. Sotirov <gdsotirov@dir.bg>
+# Copyright (C) 2012 Georgi D. Sotirov <gdsotirov@gmail.com>
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License
@@ -19,7 +19,7 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 #
-# $Id: faac-1.28-build.diff,v 1.2 2012/09/01 17:08:35 gsotirov Exp $
+# Visit SlackPack at https://sotirov-bg.net/slackpack/
 #
 
 diff -urNad faac-1.28-orig/common/mp4v2/atom_avcC.cpp faac-1.28/common/mp4v2/atom_avcC.cpp
